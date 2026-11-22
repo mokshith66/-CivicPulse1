@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Review {{ complaint.complaint_id }}{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Administrator review</span><h1 class="h2">{{ complaint.title }}</h1><div class="mono text-secondary">{{ complaint.complaint_id }} · submitted by {{ complaint.user.email }}</div></div><a class="btn btn-outline-secondary" href="{% url 'admin_complaints' %}">Back to list</a></div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="content-card mb-4">
+      <div class="detail-grid">
+        <div><span class="detail-label">Category</span><strong>{{ complaint.category }}</strong></div>
+        <div><span class="detail-label">Location</span><strong>{{ complaint.location }}</strong></div>
+        <div><span class="detail-label">Submitted</span><strong>{{ complaint.created_at|date:"d M Y, H:i" }}</strong></div>
+        <div><span class="detail-label">Coordinates</span><strong>{% if complaint.has_coordinates %}{{ complaint.latitude }}, {{ complaint.longitude }}{% else %}Not provided{% endif %}</strong></div>
+      </div>
+      <hr>
+      <h3 class="h6">Description</h3>
+      <p class="preserve-lines">{{ complaint.description }}</p>
+      {% if complaint.photo %}<img class="complaint-photo" src="{% url 'uploaded_file' complaint.photo_name %}" alt="Citizen uploaded issue photograph">{% endif %}
+    </div>
+    <div class="content-card">
+      <h2 class="h5">Status history</h2>
+      <div class="timeline">
+        {% for h in history %}
+        <div class="timeline-item"><div class="timeline-dot"></div><div>
+          <strong>{{ h.previous_status|default:"Created" }} → {{ h.new_status }}</strong>
+          <div class="small text-secondary">{{ h.changed_at|date:"d M Y, H:i" }} · {{ h.actor.name|default:"Former user" }}</div>
+          {% if h.note %}<p class="mb-0 mt-1">{{ h.note }}</p>{% endif %}
+        </div></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="content-card">
+      <h2 class="h5">Update complaint</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3"><label class="form-label" for="status">Status</label><select class="form-select" id="status" name="status">{% for s in statuses %}<option {% if complaint.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="priority">Priority</label><select class="form-select" id="priority" name="priority">{% for p in priorities %}<option {% if complaint.priority == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></div>
+        <div class="mb-3"><label class="form-label" for="admin_note">Administrative update / resolution note</label><textarea class="form-control" id="admin_note" name="admin_note" rows="4" maxlength="3000">{{ complaint.admin_note }}</textarea></div>
+        <button class="btn btn-teal w-100">Save update</button>
+      </form>
+      <hr>
+      <h3 class="h6 text-danger">Danger zone</h3>
+      <p class="small text-secondary">Only delete inappropriate test records. This cannot be undone.</p>
+      <form method="post" action="{% url 'delete_complaint' complaint.complaint_id %}" onsubmit="return confirm('Delete this complaint and its history? Type DELETE in the confirmation field first.')">
+        {% csrf_token %}
+        <input class="form-control mb-2" name="confirm" placeholder="Type DELETE to confirm">
+        <button class="btn btn-outline-danger w-100">Delete test complaint</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

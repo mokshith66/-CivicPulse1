@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Operations centre</span><h1>Administrator dashboard</h1><p class="text-secondary">Review reports, prioritize urgent issues and monitor progress.</p></div><a class="btn btn-teal" href="{% url 'admin_complaints' %}">Manage complaints</a></div>
+<div class="row g-3 mb-4">
+  {% for label, value, icon in cards %}
+  <div class="col-6 col-md-4 col-xl-2"><div class="stat-card compact-stat"><div class="stat-icon"><i class="bi bi-{{ icon }}"></i></div><div class="stat-value">{{ value }}</div><div class="text-secondary">{{ label }}</div></div></div>
+  {% endfor %}
+</div>
+<div class="content-card">
+  <div class="d-flex justify-content-between mb-3"><h2 class="h5">Latest reports</h2><a href="{% url 'admin_complaints' %}">View all</a></div>
+  {% if recent %}
+  <div class="table-responsive"><table class="table align-middle">
+    <thead><tr><th>ID</th><th>Issue</th><th>Citizen</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for c in recent %}
+    <tr>
+      <td class="mono">{{ c.complaint_id }}</td>
+      <td>{{ c.title }}<div class="small text-secondary">{{ c.category }}</div></td>
+      <td>{{ c.user.name }}</td>
+      <td><span class="status status-{{ c.status|slugify }}">{{ c.status }}</span></td>
+      <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'admin_complaint_detail' c.complaint_id %}">Review</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-inbox"></i><h3>No complaints yet</h3><p>Submitted reports will appear here.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

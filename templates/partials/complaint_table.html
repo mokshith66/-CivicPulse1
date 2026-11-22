@@ -1,0 +1,14 @@
+<div class="table-responsive"><table class="table align-middle">
+  <thead><tr><th>Complaint ID</th><th>Issue</th><th>Status</th><th>Submitted</th><th></th></tr></thead>
+  <tbody>
+  {% for c in complaints %}
+  <tr>
+    <td><span class="mono">{{ c.complaint_id }}</span></td>
+    <td><strong>{{ c.title }}</strong><div class="small text-secondary">{{ c.category }}</div></td>
+    <td><span class="status status-{{ c.status|slugify }}">{{ c.status }}</span></td>
+    <td class="small">{{ c.created_at|date:"d M Y" }}</td>
+    <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'complaint_detail' c.complaint_id %}">Details</a></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div>

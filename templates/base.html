@@ -1,0 +1,55 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CivicPulse{% endblock %} · CivicPulse</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  {% block head %}{% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark cp-nav">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'index' %}"><span class="brand-mark"><i class="bi bi-activity"></i></span> CivicPulse</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+      {% if user.is_authenticated %}
+        {% if user.role == 'admin' %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'admin_dashboard' %}">Admin dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'admin_complaints' %}">Manage complaints</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'analytics' %}">Analytics</a></li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'my_complaints' %}">My complaints</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'new_complaint' %}">Report issue</a></li>
+        {% endif %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'complaint_map' %}">Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+        <li class="nav-item"><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-sm btn-outline-light">Log out</button></form></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'track' %}">Track complaint</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Citizen login</a></li>
+        <li class="nav-item"><a class="btn btn-teal btn-sm" href="{% url 'register' %}">Get started</a></li>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<main class="container py-4">
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.level_tag }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="cp-footer mt-5"><div class="container py-4 d-flex flex-column flex-md-row justify-content-between gap-2"><div><strong>CivicPulse</strong><div class="small">Academic demonstration · Not an official government service.</div></div><div class="small">Designed to support SDG 11 and SDG 9 · OpenStreetMap tiles require internet access.</div></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

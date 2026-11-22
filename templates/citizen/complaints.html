@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}My complaints{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Your history</span><h1>My complaints</h1><p class="text-secondary">Search and track the issues you have reported.</p></div><a class="btn btn-teal" href="{% url 'new_complaint' %}">+ Report issue</a></div>
+<form class="filter-bar mb-3" method="get">
+  <input class="form-control" name="q" value="{{ search }}" placeholder="Search complaint ID or title">
+  <select class="form-select" name="status"><option value="">All statuses</option>{% for s in statuses %}<option value="{{ s }}" {% if selected_status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <button class="btn btn-outline-secondary">Filter</button>
+</form>
+<div class="content-card">
+  {% if complaints %}{% include "partials/complaint_table.html" %}{% else %}
+  <div class="empty-state"><i class="bi bi-search"></i><h3>No matching complaints</h3><p>Try another search or status filter.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

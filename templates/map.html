@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Complaint map{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Geographic overview</span><h1>Complaint map</h1><p class="text-secondary">Only reports with valid coordinates appear on the map.</p></div></div>
+<div class="content-card">
+  <div id="all-map" class="large-map"></div>
+  <p class="small text-secondary mt-3 mb-0">Map tiles depend on the OpenStreetMap service and your internet connection. Reports without coordinates are omitted.</p>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ markers|json_script:"marker-data" }}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/complaint-map.js' %}"></script>
+{% endblock %}

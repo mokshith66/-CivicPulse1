@@ -1,0 +1,13 @@
+flowchart TD
+    U[Citizen / Administrator] --> B[Web Browser]
+    B --> F[Responsive HTML, CSS, Bootstrap, JavaScript]
+    F -->|HTTPS in deployment| APP[Django Web Application - Gunicorn behind Nginx]
+    APP --> AUTH[Authentication and Authorization]
+    AUTH --> CM[Complaint Management Services]
+    CM --> DB[(Relational Database: SQLite locally / managed DB in cloud)]
+    CM --> UP[Local Uploads / Optional S3 or Azure Blob Storage]
+    F --> MAP[Leaflet Map]
+    MAP --> OSM[OpenStreetMap Tile Service]
+    F --> CH[Chart.js Analytics]
+    APP --> MON[Cloud Logs / Monitoring - optional]
+    DB --> BK[Backups - deployment configuration]

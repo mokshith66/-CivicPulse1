@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% if admin %}Administrator login{% else %}Citizen login{% endif %}{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-symbol"><i class="bi bi-{% if admin %}shield-lock{% else %}person-check{% endif %}"></i></div>
+  <h1 class="h3">{% if admin %}Administrator sign in{% else %}Welcome back{% endif %}</h1>
+  <p class="text-secondary">{% if admin %}Authorized administrators only.{% else %}Sign in to manage your reports.{% endif %}</p>
+  <form method="post">
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control" id="email" type="email" name="email" required autocomplete="username"></div>
+    <div class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" id="password" type="password" name="password" required autocomplete="current-password"></div>
+    <button class="btn btn-teal w-100 btn-lg">Sign in</button>
+  </form>
+  {% if not admin %}
+  <p class="small text-center mt-3 mb-0">Need an account? <a href="{% url 'register' %}">Register</a></p>
+  <hr><p class="small text-center mb-0"><a href="{% url 'admin_login' %}">Administrator login</a></p>
+  {% else %}
+  <p class="small text-center mt-3 mb-0"><a href="{% url 'login' %}">Citizen login</a></p>
+  {% endif %}
+</div></div>
+{% endblock %}

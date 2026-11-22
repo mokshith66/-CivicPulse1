@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ complaint.complaint_id }}{% endblock %}
+{% block head %}{% if point %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endif %}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><span class="eyebrow">Complaint tracking</span><h1 class="h2">{{ complaint.title }}</h1><div class="mono text-secondary">{{ complaint.complaint_id }}</div></div>
+  <span class="status status-{{ complaint.status|slugify }}">{{ complaint.status }}</span>
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="content-card mb-4">
+      <div class="detail-grid">
+        <div><span class="detail-label">Category</span><strong>{{ complaint.category }}</strong></div>
+        <div><span class="detail-label">Priority</span><strong>{{ complaint.priority }}</strong></div>
+        <div><span class="detail-label">Location</span><strong>{{ complaint.location }}</strong></div>
+        <div><span class="detail-label">Submitted</span><strong>{{ complaint.created_at|date:"d M Y, H:i" }}</strong></div>
+      </div>
+      <hr>
+      <h3 class="h6">Description</h3>
+      <p class="preserve-lines">{{ complaint.description }}</p>
+      {% if complaint.photo %}
+      <h3 class="h6 mt-4">Attached photo</h3>
+      <img class="complaint-photo" src="{% url 'uploaded_file' complaint.photo_name %}" alt="Uploaded issue photograph">
+      {% endif %}
+      {% if complaint.admin_note %}
+      <div class="admin-note mt-4"><strong><i class="bi bi-chat-left-text me-1"></i>Latest administrator note</strong><p class="mb-0 mt-2 preserve-lines">{{ complaint.admin_note }}</p></div>
+      {% endif %}
+    </div>
+    <div class="content-card">
+      <h2 class="h5 mb-3">Progress history</h2>
+      <div class="timeline">
+        {% for h in history %}
+        <div class="timeline-item"><div class="timeline-dot"></div><div>
+          <strong>{{ h.new_status }}</strong>
+          <div class="small text-secondary">{{ h.changed_at|date:"d M Y, H:i" }} · {{ h.actor.name|default:"Former user" }}</div>
+          {% if h.note %}<p class="mb-0 mt-1">{{ h.note }}</p>{% endif %}
+        </div></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="content-card">
+      <h2 class="h5">Location</h2>
+      {% if point %}
+      <div id="detail-map" class="map-box"></div>
+      <div class="small text-secondary mt-2">{{ complaint.latitude }}, {{ complaint.longitude }}</div>
+      {% else %}
+      <div class="empty-state compact"><i class="bi bi-geo"></i><p>No map coordinates were provided.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if point %}
+{{ point|json_script:"map-point" }}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/detail-map.js' %}"></script>
+{% endif %}
+{% endblock %}

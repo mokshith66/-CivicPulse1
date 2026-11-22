@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}My dashboard{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Citizen workspace</span><h1>Hello, {{ user.short_name }}.</h1><p class="text-secondary">Here is a quick look at your civic reports.</p></div><a class="btn btn-teal" href="{% url 'new_complaint' %}"><i class="bi bi-plus-lg me-1"></i>Report issue</a></div>
+<div class="row g-3 mb-4">
+  <div class="col-sm-6"><div class="stat-card"><div class="stat-icon"><i class="bi bi-clipboard2"></i></div><div class="stat-value">{{ total }}</div><div class="text-secondary">Your reports</div></div></div>
+  <div class="col-sm-6"><div class="stat-card"><div class="stat-icon"><i class="bi bi-map"></i></div><div class="stat-value"><a href="{% url 'complaint_map' %}" class="stat-link">Open map</a></div><div class="text-secondary">See your mapped issues</div></div></div>
+</div>
+<div class="content-card">
+  <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 mb-0">Recent complaints</h2><a href="{% url 'my_complaints' %}">View all</a></div>
+  {% if complaints %}{% include "partials/complaint_table.html" %}{% else %}
+  <div class="empty-state"><i class="bi bi-inbox"></i><h3>No reports yet</h3><p>Start by reporting an issue in your community.</p><a class="btn btn-teal" href="{% url 'new_complaint' %}">Report your first issue</a></div>
+  {% endif %}
+</div>
+{% endblock %}

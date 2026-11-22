@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Analytics{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Data-informed overview</span><h1>Complaint analytics</h1><p class="text-secondary">Charts are generated from current database records.</p></div><a class="btn btn-outline-secondary" href="{% url 'admin_dashboard' %}">Dashboard</a></div>
+<div class="row g-4">
+  <div class="col-lg-6"><div class="content-card chart-card"><h2 class="h5">Complaints by category</h2><canvas id="categoryChart" aria-label="Complaints by category" role="img"></canvas><p id="categoryEmpty" class="text-secondary small d-none">No complaint data yet.</p></div></div>
+  <div class="col-lg-6"><div class="content-card chart-card"><h2 class="h5">Status distribution</h2><canvas id="statusChart" aria-label="Complaint status distribution" role="img"></canvas><p id="statusEmpty" class="text-secondary small d-none">No complaint data yet.</p></div></div>
+  <div class="col-12"><div class="content-card chart-card"><h2 class="h5">Complaints over time</h2><canvas id="timeChart" aria-label="Complaints by date" role="img"></canvas><p id="timeEmpty" class="text-secondary small d-none">No complaint data yet.</p></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ chart|json_script:"chart-data" }}
+<script src="{% static 'js/analytics.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Manage complaints{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Administrator tools</span><h1>Manage complaints</h1><p class="text-secondary">Search, filter and review submitted civic issues.</p></div><a class="btn btn-outline-secondary" href="{% url 'analytics' %}"><i class="bi bi-bar-chart me-1"></i>Analytics</a></div>
+<form class="filter-bar mb-3" method="get">
+  <input class="form-control" name="q" value="{{ search }}" placeholder="Search ID, title or citizen email">
+  <select class="form-select" name="category"><option value="">All categories</option>{% for cat in categories %}<option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>{% endfor %}</select>
+  <select class="form-select" name="status"><option value="">All statuses</option>{% for s in statuses %}<option value="{{ s }}" {% if selected_status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select class="form-select" name="priority"><option value="">All priorities</option>{% for p in priorities %}<option value="{{ p }}" {% if selected_priority == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+  <button class="btn btn-outline-secondary">Apply</button>
+</form>
+<div class="content-card">
+  {% if complaints %}
+  <div class="table-responsive"><table class="table align-middle">
+    <thead><tr><th>Complaint</th><th>Citizen</th><th>Location</th><th>Status</th><th>Priority</th><th></th></tr></thead>
+    <tbody>
+    {% for c in complaints %}
+    <tr>
+      <td><span class="mono">{{ c.complaint_id }}</span><div><strong>{{ c.title }}</strong></div><div class="small text-secondary">{{ c.category }}</div></td>
+      <td>{{ c.user.name }}<div class="small text-secondary">{{ c.user.email }}</div></td>
+      <td>{{ c.location }}</td>
+      <td><span class="status status-{{ c.status|slugify }}">{{ c.status }}</span></td>
+      <td>{{ c.priority }}</td>
+      <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'admin_complaint_detail' c.complaint_id %}">Review</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-search"></i><h3>No results</h3><p>Adjust the filters and try again.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

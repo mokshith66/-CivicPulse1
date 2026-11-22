@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">Account settings</span><h1>Profile</h1><p class="text-secondary">Update the name displayed in CivicPulse.</p></div></div>
+<div class="content-card narrow-card">
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3"><label class="form-label" for="name">Full name</label><input class="form-control" id="name" name="name" value="{{ user.name }}" minlength="2" maxlength="100" required></div>
+    <div class="mb-3"><label class="form-label">Email</label><input class="form-control" value="{{ user.email }}" disabled><div class="form-text">Email changes are not available in this prototype.</div></div>
+    <div class="mb-3"><label class="form-label">Role</label><input class="form-control" value="{{ user.role|title }}" disabled></div>
+    <button class="btn btn-teal">Save profile</button>
+  </form>
+</div>
+{% endblock %}

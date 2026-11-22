@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Track complaint{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="auth-card">
+  <div class="auth-symbol"><i class="bi bi-upc-scan"></i></div>
+  <h1 class="h3">Track a complaint</h1>
+  <p class="text-secondary">Enter the complaint ID you received after submitting a report.</p>
+  <form method="post">
+    {% csrf_token %}
+    <label class="form-label" for="complaint_id">Complaint ID</label>
+    <input class="form-control mb-3 mono" id="complaint_id" name="complaint_id" required value="{{ complaint_id }}" placeholder="CP-2026-ABC123">
+    <button class="btn btn-teal w-100">Find complaint</button>
+  </form>
+  <p class="small text-secondary mt-3 mb-0">For privacy, sign in with the account that submitted the complaint. Administrators can review all complaints.</p>
+</div></div>
+{% endblock %}
